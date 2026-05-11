@@ -1,37 +1,42 @@
 package com.fauzify.phone_dialer_app
 
+import android.content.Intent
+import android.net.Uri
+
 import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugin.common.MethodChannel
 
 class MainActivity : FlutterActivity() {
-    class MainActivity : FlutterActivity() {
 
-        private val CHANNEL = "call_bridge"
+    private val CHANNEL = "call_bridge"
 
-        override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
-            super.configureFlutterEngine(flutterEngine)
+    override fun configureFlutterEngine(
+        flutterEngine: FlutterEngine
+    ) {
+        super.configureFlutterEngine(flutterEngine)
 
-            MethodChannel(
-                flutterEngine.dartExecutor.binaryMessenger,
-                CHANNEL
-            ).setMethodCallHandler { call, result ->
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            CHANNEL
+        ).setMethodCallHandler { call, result ->
 
-                if (call.method == "makeCall") {
+            if (call.method == "makeCall") {
 
-                    val phoneNumber =
-                        call.argument<String>("phoneNumber") ?: ""
+                val phoneNumber =
+                    call.argument<String>("phoneNumber") ?: ""
 
-                    val intent = Intent(
-                        Intent.ACTION_DIAL,
-                        Uri.parse("tel:$phoneNumber")
-                    )
+                val intent = Intent(
+                    Intent.ACTION_DIAL,
+                    Uri.parse("tel:$phoneNumber")
+                )
 
-                    startActivity(intent)
+                startActivity(intent)
 
-                    result.success(null)
+                result.success(null)
 
-                } else {
-                    result.notImplemented()
-                }
+            } else {
+                result.notImplemented()
             }
         }
     }
